@@ -1,0 +1,27 @@
+# clj-mhsim
+
+モンスターハンターポータブル3rd用の(Clojureで書いた)スキルシミュレータです。
+ClojureからSwingを使うためのサンプルも兼ねています。
+
+保存・読み込み、スキルの検索、他...対応予定です。
+
+
+## Usage
+
+# CSVデータの取得
+このプロジェクトにはCSVが含まれていません。
+頑シミュ(http://www.geocities.jp/masax_mh/mhp3/)をダウンロードして
+当プロジェクトのcsvディレクトリ直下にコピーしてください。
+
+# 実行
+実行にはLeiningen(https://github.com/technomancy/leiningen)が必要です。
+
+1. lein repl
+2. (clj-mhsim.view/start)
+
+
+## License
+
+Copyright (C) 2010 Kouhei Mikami
+
+Distributed under the Eclipse Public License, the same as Clojure.
