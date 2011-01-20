@@ -3,23 +3,26 @@
 モンスターハンターポータブル3rd用の(Clojureで書いた)スキルシミュレータです。
 ClojureからSwingを使うためのサンプルも兼ねています。
 
+現状は防具を選択をしたとき、発動したスキルをリストに表示させる機能しかありません。
 保存・読み込み、スキルの検索、他...対応予定です。
 
 
 ## Usage
 
-1/19 : !!起動しません!!
-
-# CSVデータの取得
-このプロジェクトにはCSVが含まれていません。
-頑シミュ(http://www.geocities.jp/masax_mh/mhp3/)をダウンロードして
-当プロジェクトのcsvディレクトリ直下にコピーしてください。
 
 # 実行
 実行にはLeiningen（https://github.com/technomancy/leiningen）が必要です。
 
 1. lein repl
-2. (clj-mhsim.view/start)
+2. (clj-mhsim.controller/-main)
+
+もしくは
+
+1. lein uberjar
+2. 作成されたclj-mhsim-1.0.0-SNAPSHOT-standalone.jarをクリック
+
+
+CSVデータは頑シミュさんの物を使わせて貰っています。
 
 
 ## License
