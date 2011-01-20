@@ -1,21 +1,17 @@
 (ns clj-mhsim.controller
   (:use [clj-mhsim model view]))
 
-(defn fnself
+(defn fnself []
   "自分自身を取得する為の式を返す"
   (fn [m] m))
-
-(defn fnequip [equip]
-  "指定部位を取得する為の式を返す"
-  (fnkey-val :equip equip))
 
 (defn fnkey-val [key val]
   "マップのkeyがvalと一致する装備を取得する為の式を返す"
   (fn [m] (if (= val (m key)) true nil)))
 
-(defn search-equip [key val]
-  "keyの値がvalに一致する装備品のベクタを返す"
-  (first (search (fnkey-val key val) fnself)))
+(defn fnequip [equip]
+  "指定部位を取得する為の式を返す"
+  (fnkey-val :equip equip))
 
 (defn search
   "装備の条件(fncond)と取得する要素(fngetter)の式を渡し、一致するベクタを返す"
@@ -29,6 +25,10 @@
             res)
          (rest v)))))
 
+(defn search-equip [key val]
+  "keyの値がvalに一致する装備品のベクタを返す"
+  (first (search (fnkey-val key val) (fnself))))
+
 (defn skill-def [name]
   "指定された名前のスキル定義を返す"
   (loop [list skill-list]
@@ -38,20 +38,13 @@
         nil
         (recur (rest list))))))
 
-(defn skill-check [name point]
-  "スキル名(スキルの種類)とポイントから発動スキル名を返す"
-  (let [sk-def (skill-def name)]
-    (if (<= (Integer/valueOf (sk-def :point)) (Integer/valueOf point))
-      (sk-def :skill-name)
-      nil)))
-
-(defn calc-skill [equips]
-  "選択した装備一覧からスキル値の合計と発動スキルのマップを返す"
-  (loop [res {} e equips]
-   (if (zero? (count e))
-     res
-     (recur (let [n @(first (rest (first e)))]
-               (if n (add-skill res (search-equip :name n)) res)) (rest e)))))
+(defn fnskill-check []
+  "スキル名(スキルの種類)とポイントから発動スキル名を返す関数を返す"
+  (fn [name point]
+    (let [sk-def (skill-def name)]
+      (if (<= (Integer/valueOf (sk-def :point)) (Integer/valueOf point))
+        (sk-def :skill-name)
+        nil))))
 
 (defn composite [map name point]
   "スキル名にスキルポイントを追加したマップを返す"
@@ -74,6 +67,18 @@
 ; 各部位の装備品名称ベクタ
 (def head-names (ref (namelist "head")))
 (def body-names  (ref (namelist "body")))
-(def hand-names  (ref (namelist "hand")))
-(def west-names  (ref (namelist "west")))
+(def hand-names  (ref (namelist "arm")))
+(def west-names  (ref (namelist "wst")))
 (def leg-names  (ref (namelist "leg")))
+
+(defn fncalculator []
+  "選択した装備一覧からスキル値の合計と発動スキルのマップを返す関数を返す"
+  (fn [equips]
+    (loop [res {} e equips]
+      (if (zero? (count e))
+        res
+        (recur (let [n @(first (rest (first e)))]
+        (if n (add-skill res (search-equip :name n)) res)) (rest e))))))
+
+(defn -main [& args]
+     (show (fncalculator) (fnskill-check) head-names body-names hand-names west-names leg-names))
